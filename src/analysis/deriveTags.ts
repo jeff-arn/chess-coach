@@ -17,7 +17,7 @@ export function deriveTags(input: DeriveInput): WeaknessTag[] {
   const tags = new Set<WeaknessTag>();
   const { fenBefore, fenAfter, san, ply, cpLoss, line, wasCapture } = input;
 
-  if (detectHangingPiece(fenAfter) && cpLoss >= 100) tags.add('hangsPieces');
+  if (detectHangingPiece(fenAfter)) tags.add('hangsPieces');
   if (detectHangingPiece(fenBefore) && cpLoss >= 100) tags.add('missesTactics');
   if (line.mate !== null && line.mate > 0 && cpLoss >= 200) tags.add('missesMates');
   if (tags.has('hangsPieces') && !wasCapture && cpLoss >= 200) tags.add('ignoresThreats');
