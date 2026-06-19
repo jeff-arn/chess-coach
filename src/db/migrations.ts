@@ -2,7 +2,7 @@ import type { Database } from 'better-sqlite3';
 
 export type Migration = { id: number; name: string; sql: string };
 
-/** Ordered migrations. Task 3 appends migration 1. */
+/** All migrations, applied in id order by runMigrations(). Append new migrations here. */
 export const MIGRATIONS: Migration[] = [];
 
 MIGRATIONS.push({

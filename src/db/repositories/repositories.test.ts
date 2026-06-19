@@ -18,6 +18,19 @@ describe('analysesRepo + profilesRepo', () => {
     expect(getAnalysis(db, 'g1')).toEqual(moves);
   });
 
+  it('returns null when no analysis exists for a game', () => {
+    db = openDb(':memory:');
+    expect(getAnalysis(db, 'nonexistent')).toBeNull();
+  });
+
+  it('cascades the delete from games to analyses (FK ON DELETE CASCADE)', () => {
+    db = openDb(':memory:');
+    upsertGame(db, { id: 'g1', playedAt: '2026-01-01T00:00:00Z', timeControl: '600', userColor: 'white', result: 'loss', pgn: '1. e4' });
+    saveAnalysis(db, 'g1', []);
+    db.prepare('DELETE FROM games WHERE id = ?').run('g1');
+    expect(getAnalysis(db, 'g1')).toBeNull();
+  });
+
   it('returns the most recently saved weakness profile', () => {
     db = openDb(':memory:');
     const a = { totalMoves: 1 } as WeaknessProfile;
