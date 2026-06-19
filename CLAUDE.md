@@ -126,6 +126,11 @@ These are created in Plan 1 (Task 2). Read the relevant file for its domain:
    Commits use Conventional Commits (`feat(domain): …`).
 3. **When the epic's tasks are all done, open a PR** from the epic branch to `main`
    (`gh pr create`). The PR description links the epic bead and lists the closed tasks.
+   **Close beads and commit the resulting `.beads/issues.jsonl` export _before_ opening
+   the PR** — `bd close` runs against the local Dolt DB and the hook only exports on
+   commit, so a close made after the final task commit gets stranded locally (it never
+   reaches `main`, which is protected). Close-then-commit on the branch so the closures
+   ride into the PR.
 4. **The human reviews and merges** in GitHub. After merge: `git checkout main &&
    git pull`, then `bd close <epic>` to unblock the next epic, then branch for it.
 
