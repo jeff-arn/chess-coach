@@ -20,7 +20,9 @@ export class FallbackCoach implements Coach {
   async buildPlanDetailed(input: CoachInput): Promise<CoachResult> {
     try {
       return { plan: await this.primary.buildPlan(input), usedFallback: false };
-    } catch {
+    } catch (err) {
+      // Log server-side so fallbacks are diagnosable; the UI also sees usedFallback.
+      console.error('coach: primary failed, using rules-based fallback:', err);
       return { plan: await this.fallback.buildPlan(input), usedFallback: true };
     }
   }

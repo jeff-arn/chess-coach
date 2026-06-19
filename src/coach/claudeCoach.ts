@@ -50,7 +50,10 @@ export class ClaudeCoach implements Coach {
   ) {}
 
   async buildPlan(input: CoachInput): Promise<LessonPlan> {
-    const prompt = buildPrompt(input);
+    const validIds = new Set(input.catalog.map((m) => m.id));
+    const messages: { role: 'user'; content: string }[] = [
+      { role: 'user', content: buildPrompt(input) },
+    ];
     let lastErr: unknown;
     for (let attempt = 0; attempt < 2; attempt += 1) {
       const res = await this.client.messages.create({
@@ -58,18 +61,24 @@ export class ClaudeCoach implements Coach {
         max_tokens: 1024,
         tools: [PLAN_TOOL as never],
         tool_choice: { type: 'tool', name: TOOL_NAME },
-        messages: [{ role: 'user', content: prompt }],
+        messages,
       });
       const block = res.content.find((b) => b.type === 'tool_use');
       const parsed = lessonPlanSchema.safeParse(block && 'input' in block ? block.input : undefined);
       if (parsed.success) {
-        const validIds = new Set(input.catalog.map((m) => m.id));
         const modules = parsed.data.modules.filter((m) => validIds.has(m.moduleId));
         if (modules.length > 0) return { ...parsed.data, modules };
         lastErr = new Error('coach selected no valid modules');
       } else {
         lastErr = parsed.error;
       }
+      // Give the single retry a corrective nudge instead of re-sending the same prompt.
+      messages.push({
+        role: 'user',
+        content: `Your previous response was invalid (${
+          lastErr instanceof Error ? lastErr.message : 'schema mismatch'
+        }). Call ${TOOL_NAME} again, choosing moduleId values ONLY from the catalog above and including at least one module.`,
+      });
     }
     throw lastErr instanceof Error ? lastErr : new Error('claude coach failed');
   }

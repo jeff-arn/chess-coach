@@ -30,9 +30,22 @@ export class RulesCoach implements Coach {
         ? `Working these modules should move you from ${currentRating} toward ${targetRating}.`
         : `Set a target rating to track progress toward a concrete milestone.`;
 
-    return {
-      modules: modules.length > 0 ? modules : [{ moduleId: catalog[0]?.id ?? 'board-awareness', rationale: 'Start here.' }],
-      milestoneRationale,
-    };
+    // When every module is completed (or the catalog is empty), we still must
+    // return at least one module — recommend reviewing the most fundamental one
+    // rather than mislabeling a finished module as a fresh start.
+    const reviewFallback = [...catalog].sort((a, b) => a.orderHint - b.orderHint)[0];
+    const finalModules =
+      modules.length > 0
+        ? modules
+        : reviewFallback
+          ? [
+              {
+                moduleId: reviewFallback.id,
+                rationale: "You've worked through the curriculum — revisit this fundamental to keep it sharp.",
+              },
+            ]
+          : [{ moduleId: 'board-awareness', rationale: 'Start here.' }];
+
+    return { modules: finalModules, milestoneRationale };
   }
 }

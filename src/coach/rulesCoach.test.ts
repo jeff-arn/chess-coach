@@ -39,4 +39,16 @@ describe('RulesCoach', () => {
     const plan = await new RulesCoach().buildPlan(input);
     expect(plan.modules.map((m) => m.moduleId)).not.toContain('dont-hang-pieces');
   });
+
+  it('recommends a review when every module is completed', async () => {
+    const input: CoachInput = {
+      profile: profile({ hangsPieces: 0.6 }),
+      currentRating: 400, targetRating: 600, catalog,
+      completedModuleIds: ['dont-hang-pieces', 'opening-principles'],
+    };
+    const plan = await new RulesCoach().buildPlan(input);
+    expect(plan.modules).toHaveLength(1);
+    expect(plan.modules[0]?.moduleId).toBe('dont-hang-pieces'); // lowest orderHint
+    expect(plan.modules[0]?.rationale).toMatch(/revisit|review|sharp/i);
+  });
 });

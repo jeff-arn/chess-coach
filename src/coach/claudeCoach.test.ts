@@ -43,4 +43,14 @@ describe('ClaudeCoach', () => {
     await expect(coach.buildPlan(input)).rejects.toThrow();
     expect(client.messages.create).toHaveBeenCalledTimes(2);
   });
+
+  it('treats schema-valid output with no catalog-valid module ids as a failure', async () => {
+    const client = clientReturning({
+      modules: [{ moduleId: 'hallucinated-id', rationale: 'not in catalog' }],
+      milestoneRationale: 'x',
+    });
+    const coach = new ClaudeCoach(client as never, 'claude-test');
+    await expect(coach.buildPlan(input)).rejects.toThrow();
+    expect(client.messages.create).toHaveBeenCalledTimes(2);
+  });
 });
