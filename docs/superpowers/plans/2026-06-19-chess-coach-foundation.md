@@ -12,6 +12,26 @@
 
 **Spec:** `docs/superpowers/specs/2026-06-19-chess-coach-design.md`
 
+## Tracking (beads)
+
+This plan is tracked in **beads**. The markdown below is the detailed implementation
+reference; **beads owns status, dependencies, and "what's ready next."** Run
+`bd ready` to get the next unblocked task, `bd update <id> --claim` to start it, and
+`bd close <id>` when its done-criteria pass. Epic: **`chess-coach-y9v`**.
+
+| Task | Bead | Depends on |
+|------|------|------------|
+| Task 1: Scaffold | `chess-coach-d6q` | — |
+| Task 2: Conventions & hooks | `chess-coach-btz` | Task 1 |
+| Task 3: Domain types/thresholds | `chess-coach-6fb` | Task 1 |
+| Task 4: classifyMove | `chess-coach-re9` | Task 3 |
+| Task 5: detectPhase | `chess-coach-hde` | Task 3 |
+| Task 6: detectHangingPiece | `chess-coach-tkx` | Task 3 |
+| Task 7: detectWeakOpening | `chess-coach-5ws` | Task 3 |
+| Task 8: aggregateProfile | `chess-coach-ek6` | Task 3 |
+
+Tasks 4–8 share no dependencies on each other and can run in parallel once Task 3 lands.
+
 ---
 
 ## File Structure (created by this plan)
@@ -260,96 +280,21 @@ git commit -m "chore: scaffold next.js + typescript project and tooling"
 ## Task 2: Repo conventions, guardrails, and git hooks
 
 **Files:**
-- Create: `CLAUDE.md`, `.claude/rules/{clean-code,nextjs-react,web-ui,testing,security,llm-coach,chess-domain,engine-analysis,external-apis,data-persistence,commits}.md`, `.githooks/pre-commit`, `.githooks/commit-msg`, `.gitleaks.toml`, `.env.example`
+- Modify (already exists): `CLAUDE.md`
+- Create: `.claude/rules/{clean-code,nextjs-react,web-ui,testing,security,llm-coach,chess-domain,engine-analysis,external-apis,data-persistence,commits}.md`, `.githooks/pre-commit`, `.githooks/commit-msg`, `.gitleaks.toml`, `.env.example`
 
 This task is documentation + hooks (no TDD). Content is concrete; where a file closely mirrors the chainsmith template, the step names the exact source and the exact changes to make.
 
-- [ ] **Step 1: Create `CLAUDE.md`**
+- [ ] **Step 1: Verify `CLAUDE.md` (already created during beads setup)**
 
-```markdown
-# chess-coach
+`CLAUDE.md` already exists: `bd init` created it with a delimited beads-integration
+block, and the project content (stack, project phase, hard requirements, rules-file
+index, git hooks, common commands, definition of done) was merged in below that block.
 
-A personal, locally-run AI chess coach for a beginner. Connects to a chess.com
-account, analyzes games with Stockfish, distills a weakness profile, and uses a
-pluggable Coach (Claude by default) to sequence a curated beginner curriculum and
-set rating milestones. Single user, no accounts, all data local.
-
-Design spec: `docs/superpowers/specs/2026-06-19-chess-coach-design.md`.
-
-## Stack
-
-- Framework: Next.js 15 (App Router), TypeScript `strict` (`noUncheckedIndexedAccess`,
-  `exactOptionalPropertyTypes`), pnpm
-- Chess rules / PGN: `chess.js`
-- Engine: Stockfish WASM in a Web Worker (browser)
-- Persistence: local SQLite via `better-sqlite3`
-- Coach: pluggable `Coach` interface; Claude (latest model) default + rules-based fallback
-- Validation: `zod`
-- Testing: Vitest + React Testing Library (unit/component), Playwright (E2E)
-- Lint/format: ESLint (`next/core-web-vitals`, `next/typescript`) + Prettier
-
-## Project phase
-
-**Current phase:** `pre-launch` <!-- single user; APIs and schema can break freely -->
-
-## Hard requirements
-
-- **Strict TypeScript.** No `any`, no non-null assertions outside generated code.
-- **The Claude API key never reaches the client bundle.** It is read server-side in
-  API routes only. See `.claude/rules/security.md`.
-- **Stockfish facts ground the coach.** The LLM never invents evaluations or moves;
-  it selects from the fixed curriculum. See `.claude/rules/llm-coach.md`.
-- **Strict testing discipline.** Happy + negative + variant coverage. A failing test
-  is investigated, not weakened. See `.claude/rules/testing.md`.
-- **The weakness-tag taxonomy and centipawn thresholds are canonical** and live in
-  `src/domain/` per `.claude/rules/chess-domain.md`. Do not redefine them elsewhere.
-
-## Rules files
-
-- `.claude/rules/clean-code.md`: function design, naming, comments, anti-over-engineering, TS specifics
-- `.claude/rules/nextjs-react.md`: server vs client components, API routes, hooks, state ownership, file layout
-- `.claude/rules/web-ui.md`: semantic HTML, accessibility, responsive layout, chessboard patterns, design tokens
-- `.claude/rules/testing.md`: Vitest, RTL, Playwright, the mock seam, what "tested" means
-- `.claude/rules/security.md`: server-only secrets, parameterized SQL, untrusted input, CSP, deps
-- `.claude/rules/llm-coach.md`: structured output, grounding, fallback, untrusted prompt input
-- `.claude/rules/chess-domain.md`: chess vocabulary, weakness-tag taxonomy, classification thresholds
-- `.claude/rules/engine-analysis.md`: Stockfish worker discipline, reproducible evals, caching
-- `.claude/rules/external-apis.md`: chess.com + Claude client conventions, the mock seam
-- `.claude/rules/data-persistence.md`: SQLite migrations, query layer, parameterized queries
-- `.claude/rules/commits.md`: Conventional Commits
-
-## Git hooks
-
-One-time setup per clone:
-
-\`\`\`bash
-git config core.hooksPath .githooks
-\`\`\`
-
-- `pre-commit`: `gitleaks` secret scan, then `pnpm typecheck`, `pnpm lint`, `pnpm test:run`.
-- `commit-msg`: validates the subject against Conventional Commits.
-
-`gitleaks` must be on PATH; the pre-commit hook hard-fails if it is missing.
-
-## Common commands
-
-\`\`\`bash
-pnpm dev          # dev server
-pnpm build        # production build
-pnpm typecheck    # tsc --noEmit
-pnpm lint         # eslint
-pnpm test         # vitest watch
-pnpm test:run     # vitest single run (CI / pre-commit)
-\`\`\`
-
-## Definition of done
-
-- `pnpm typecheck` passes
-- `pnpm lint` passes
-- `pnpm test:run` passes, including negative and variant cases for changed code
-- New behavior has tests at the correct layer (see `testing.md`)
-- No secrets added to the client bundle or the repo
-```
+Do **not** overwrite it. Confirm it still contains the `<!-- BEGIN BEADS INTEGRATION -->`
+… `<!-- END BEADS INTEGRATION -->` block (bd manages that region) and the project
+section beneath it. If the rules-file index drifts from what Steps 2–6 actually
+create, update the index. Otherwise leave it as-is.
 
 - [ ] **Step 2: Create `.claude/rules/clean-code.md`**
 
