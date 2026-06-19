@@ -4,6 +4,9 @@ node_modules/
 *.db
 dist/
 .next/
+next-env.d.ts
+coverage/
+*.tsbuildinfo
 
 # Beads / Dolt files (added by bd init)
 .dolt/
