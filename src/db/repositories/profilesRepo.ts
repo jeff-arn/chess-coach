@@ -8,6 +8,13 @@ export function saveProfile(db: Database, profile: WeaknessProfile): void {
   );
 }
 
+export function listProfiles(db: Database): WeaknessProfile[] {
+  const rows = db
+    .prepare('SELECT profile_json FROM weakness_profiles ORDER BY id ASC')
+    .all() as { profile_json: string }[];
+  return rows.map((r) => JSON.parse(r.profile_json) as WeaknessProfile);
+}
+
 export function latestProfile(db: Database): WeaknessProfile | null {
   const row = db
     .prepare('SELECT profile_json FROM weakness_profiles ORDER BY id DESC LIMIT 1')
