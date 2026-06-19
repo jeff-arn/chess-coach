@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { DashboardView } from './page';
+import { DashboardView } from './DashboardView';
 
 describe('DashboardView', () => {
   it('shows top weaknesses and a milestone when data exists', () => {
