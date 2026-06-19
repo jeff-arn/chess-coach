@@ -5,14 +5,21 @@ import type { Engine, EngineLine } from './types';
 /**
  * Stockfish-WASM engine running in a Web Worker. Parses UCI `info`/`bestmove`
  * output. Fixed depth per call for reproducible evaluations (see
- * .claude/rules/engine-analysis.md). Browser-only. The exact worker asset path
- * is environment-dependent and is verified by Plan 4's engine-smoke E2E test.
+ * .claude/rules/engine-analysis.md). Browser-only.
+ *
+ * The worker asset (the single-threaded lite build, which needs no cross-origin
+ * isolation) is copied into `public/stockfish/` by `scripts/copy-stockfish.mjs`,
+ * which runs automatically via the `predev`/`prebuild` npm lifecycle hooks. It is
+ * loaded with a plain runtime string URL — NOT `new URL(..., import.meta.url)` —
+ * so webpack does not try to bundle the worker (its bin script references Node
+ * built-ins and fails to bundle). The path is verified by Plan 4's engine-smoke
+ * E2E test.
  */
 export class StockfishEngine implements Engine {
   private worker: Worker;
 
   constructor() {
-    this.worker = new Worker(new URL('stockfish/src/stockfish.js', import.meta.url));
+    this.worker = new Worker('/stockfish/stockfish-18-lite-single.js');
     this.worker.postMessage('uci');
   }
 
