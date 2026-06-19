@@ -68,9 +68,9 @@ set rating milestones. Single user, no accounts, all data local.
 > detailed implementation reference (the code/tests for each task); each bead links
 > back to its plan section. Use `bd ready` to find the next unblocked task.
 >
-> **Note on the Session Completion block above:** this project has no git remote
-> yet, so the mandatory `git push` step is a no-op until a remote is added — commit
-> locally instead.
+> **Remote:** `origin` → `git@github.com:jeff-arn/chess-coach.git` (public), default
+> branch `main`. This repo is pinned to SSH key `~/.ssh/id_cc_do` via a repo-scoped
+> `core.sshCommand`, so the beads session-end `git push` works non-interactively.
 
 ## Stack
 
