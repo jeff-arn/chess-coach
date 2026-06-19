@@ -12,3 +12,7 @@ coverage/
 # Beads / Dolt files (added by bd init)
 .dolt/
 .beads-credential-key
+
+# Playwright
+test-results/
+playwright-report/
