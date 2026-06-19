@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "chess_coach",
+  "project_id": "e9b891bb-e15f-4b80-8b5a-e73b7857b39b"
+}
