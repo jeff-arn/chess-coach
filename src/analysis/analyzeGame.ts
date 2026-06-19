@@ -16,7 +16,10 @@ function uciToSan(fen: string, uci: string): string {
   if (uci.length < 4) return uci;
   const c = new Chess(fen);
   try {
-    const m = c.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci.slice(4, 5) || undefined });
+    const promotion = uci.slice(4, 5) || undefined;
+    const m = c.move(promotion
+      ? { from: uci.slice(0, 2), to: uci.slice(2, 4), promotion }
+      : { from: uci.slice(0, 2), to: uci.slice(2, 4) });
     return m.san;
   } catch {
     return uci;
