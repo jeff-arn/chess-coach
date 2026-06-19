@@ -40,7 +40,6 @@ Tasks 4–8 share no dependencies on each other and can run in parallel once Tas
 chess-coach/
 ├── CLAUDE.md                       # project overview + rules index + commands
 ├── .claude/rules/                  # 11 guardrail files (see Task 2)
-├── .githooks/                      # pre-commit + commit-msg
 ├── .env.example                    # documents required env vars
 ├── .gitignore                      # (already exists; extended)
 ├── .gitleaks.toml                  # gitleaks config
@@ -281,7 +280,13 @@ git commit -m "chore: scaffold next.js + typescript project and tooling"
 
 **Files:**
 - Modify (already exists): `CLAUDE.md`
-- Create: `.claude/rules/{clean-code,nextjs-react,web-ui,testing,security,llm-coach,chess-domain,engine-analysis,external-apis,data-persistence,commits}.md`, `.githooks/pre-commit`, `.githooks/commit-msg`, `.gitleaks.toml`, `.env.example`
+- Create: `.claude/rules/{clean-code,nextjs-react,web-ui,testing,security,llm-coach,chess-domain,engine-analysis,external-apis,data-persistence,commits}.md`, `.env.example`
+
+> **Note:** Local git hooks are intentionally NOT installed. `core.hooksPath` is
+> `.beads/hooks` (beads issue sync) and must stay that way. Quality gating
+> (typecheck/lint/test/build) is enforced by GitHub CI on PRs (`.github/workflows/ci.yml`),
+> not by a local pre-commit hook. `commits.md` documents the commit convention we follow
+> by hand.
 
 This task is documentation + hooks (no TDD). Content is concrete; where a file closely mirrors the chainsmith template, the step names the exact source and the exact changes to make.
 
@@ -327,15 +332,9 @@ Copy `/home/jeffa/code/chainsmith-deck-builder/chainsmith-web/.claude/rules/secu
 - **Dependencies:** committed lockfile, pinned exact versions (no `^`), `pnpm audit` in CI.
 - Keep a "when to break a rule" closing clause.
 
-- [ ] **Step 5: Create `.claude/rules/commits.md` and the hooks**
+- [ ] **Step 5: Create `.claude/rules/commits.md`**
 
-`.claude/rules/commits.md`: Conventional Commits 1.0 — allowed types `feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert`; optional lowercase scope `[a-z0-9_/-]`; subject starts lowercase/digit, no trailing period, ≤72 chars; `!` or `BREAKING CHANGE:` footer for breaks. Give 3 examples using chess-coach scopes (`domain`, `engine`, `coach`, `api`, `ui`).
-
-`.githooks/commit-msg`: copy `/home/jeffa/code/chainsmith-deck-builder/chainsmith-web/.githooks/commit-msg` verbatim (it is project-agnostic) and update the example scopes in the help text to chess-coach ones.
-
-`.githooks/pre-commit`: copy `/home/jeffa/code/chainsmith-deck-builder/chainsmith-web/.githooks/pre-commit` and make exactly these edits: remove the entire i18n-extraction freshness block (lines from "checking i18n extraction freshness" to its `fi`); change `pnpm test --run` to `pnpm test:run`; keep the gitleaks gate, `pnpm typecheck`, `pnpm lint`.
-
-`.gitleaks.toml`: copy `/home/jeffa/code/chainsmith-deck-builder/chainsmith-web/.gitleaks.toml` verbatim.
+`.claude/rules/commits.md`: Conventional Commits 1.0 — allowed types `feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert`; optional lowercase scope `[a-z0-9_/-]`; subject starts lowercase/digit, no trailing period, ≤72 chars; `!` or `BREAKING CHANGE:` footer for breaks. Give 3 examples using chess-coach scopes (`domain`, `engine`, `coach`, `api`, `ui`). State that the convention is followed by hand and enforced in review (no local commit-msg hook, to avoid overriding beads' `core.hooksPath`).
 
 - [ ] **Step 6: Create the remaining rules files as concrete files (not placeholders)**
 
@@ -362,22 +361,18 @@ ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx
 CHESS_COACH_DB=./chess-coach.db
 ```
 
-- [ ] **Step 8: Wire up and verify hooks**
+- [ ] **Step 8: Confirm CI is the gate (no local hooks)**
 
-Run: `git config core.hooksPath .githooks && chmod +x .githooks/pre-commit .githooks/commit-msg`
-Run: `bash .githooks/commit-msg <(printf 'bad subject line')`
-Expected: exits non-zero with the Conventional Commits help text.
-Run: `bash .githooks/commit-msg <(printf 'docs: add rules files')`
-Expected: exits 0.
+Do NOT run `git config core.hooksPath` — leave it at `.beads/hooks`. Confirm
+`.github/workflows/ci.yml` exists (added during workflow setup) and that its `verify`
+job runs `typecheck`, `lint`, `test:run`, and `build`. These run on the epic's PR.
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add CLAUDE.md .claude .githooks .gitleaks.toml .env.example
-git commit -m "docs: add repo conventions, rules files, and git hooks"
+git add CLAUDE.md .claude .env.example
+git commit -m "docs: add repo conventions and rules files"
 ```
-
-If `gitleaks` is not installed, install it first (`https://github.com/gitleaks/gitleaks#installing`) — the pre-commit hook requires it.
 
 ---
 
@@ -1001,8 +996,8 @@ git commit -m "feat(domain): aggregate move analyses into a weakness profile"
 - `pnpm install`, `pnpm typecheck`, `pnpm lint`, `pnpm test:run` all pass.
 - `src/domain/` exposes `classifyMove`, `detectPhase`, `detectHangingPiece`,
   `detectWeakOpening`, and `aggregateProfile`, each with happy/negative/variant tests.
-- `CLAUDE.md`, all eleven `.claude/rules/` files, `.githooks/`, `.gitleaks.toml`, and
-  `.env.example` exist; hooks are wired via `core.hooksPath`.
+- `CLAUDE.md` and all eleven `.claude/rules/` files plus `.env.example` exist;
+  `core.hooksPath` is left at `.beads/hooks`; CI (`verify`) is the quality gate.
 - The canonical taxonomy and thresholds live only in `src/domain/types.ts` and
   `src/domain/thresholds.ts`.
 

@@ -116,12 +116,33 @@ These are created in Plan 1 (Task 2). Read the relevant file for its domain:
 - `.claude/rules/data-persistence.md`: SQLite migrations, query layer, parameterized queries
 - `.claude/rules/commits.md`: Conventional Commits
 
-## Git hooks (code quality)
+## Branching & PR workflow
 
-Distinct from beads' Claude session hooks. Wired via `git config core.hooksPath .githooks`:
+`main` is protected — no direct pushes. Work flows through feature branches and PRs:
 
-- `pre-commit`: `gitleaks` secret scan, then `pnpm typecheck`, `pnpm lint`, `pnpm test:run`.
-- `commit-msg`: validates the subject against Conventional Commits.
+1. **One feature branch per epic**, named `epic/plan-<n>-<slug>` (e.g.
+   `epic/plan-1-foundation`). Created off the latest `main`.
+2. **One commit per task**, pushed to the epic branch as each bead is completed.
+   Commits use Conventional Commits (`feat(domain): …`).
+3. **When the epic's tasks are all done, open a PR** from the epic branch to `main`
+   (`gh pr create`). The PR description links the epic bead and lists the closed tasks.
+4. **The human reviews and merges** in GitHub. After merge: `git checkout main &&
+   git pull`, then `bd close <epic>` to unblock the next epic, then branch for it.
+
+## CI (the quality gate)
+
+`.github/workflows/ci.yml` runs on every PR into `main` — the **`verify`** job:
+`pnpm install --frozen-lockfile` → `typecheck` → `lint` → `test:run` → `build`.
+Branch protection requires `verify` to pass before merge. CI is the authoritative
+check (it replaces local pre-commit quality hooks).
+
+## Git hooks
+
+`core.hooksPath` is `.beads/hooks` (set by `bd init`) — do **not** override it. These
+hooks keep the beads issue store in sync: export `issues.jsonl` on commit, and
+import/sync on checkout/merge (important across the epic-branch + PR-merge flow).
+Conventional-commit discipline is followed by convention (see `.claude/rules/commits.md`);
+it is not locally enforced so beads' hooks stay intact.
 
 ## Common commands
 
