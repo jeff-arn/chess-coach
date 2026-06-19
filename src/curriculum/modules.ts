@@ -21,7 +21,7 @@ export const MODULES: Module[] = [
     practice: [
       {
         fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
-        solution: 'd2d4',
+        solution: 'd4',
         hint: 'Challenge the center immediately. Which central pawn advance fights for space?',
       },
     ],
@@ -47,9 +47,9 @@ export const MODULES: Module[] = [
     ],
     practice: [
       {
-        fen: 'rnbqkb1r/ppp2ppp/3p4/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4',
-        solution: 'Nxe5',
-        hint: 'Is the e5 pawn defended? Count attackers and defenders before taking.',
+        fen: 'rnbqkb1r/pppppppp/5n2/4P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2',
+        solution: 'Nd5',
+        hint: 'Your knight on f6 is attacked by the e5 pawn and cannot capture it. Move it to a safe, active square instead of leaving it to be taken.',
       },
     ],
     completionCriteria: { practiceToPass: 1 },
@@ -75,7 +75,7 @@ export const MODULES: Module[] = [
     practice: [
       {
         fen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq d6 0 3',
-        solution: 'c4d5',
+        solution: 'cxd5',
         hint: 'White can capture a pawn. Is it free to take, or is it defended?',
       },
     ],
@@ -157,7 +157,7 @@ export const MODULES: Module[] = [
     practice: [
       {
         fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2',
-        solution: 'g1f3',
+        solution: 'Nf3',
         hint: 'Develop a piece toward the center. Which knight move follows opening principles?',
       },
     ],
