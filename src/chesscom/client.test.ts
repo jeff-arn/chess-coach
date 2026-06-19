@@ -19,11 +19,16 @@ describe('chess.com client', () => {
     expect(games[0]?.pgn).toContain('e4');
   });
   it('rejects an invalid username before calling the network', async () => {
-    await expect(fetchArchiveGames('bad name!', 2025, 1, { fetchImpl: fakeFetch(ARCHIVE) })).rejects.toThrow();
+    const spy = fakeFetch(ARCHIVE);
+    await expect(fetchArchiveGames('bad name!', 2025, 1, { fetchImpl: spy })).rejects.toThrow();
+    expect(spy).not.toHaveBeenCalled();
   });
   it('reads the rapid rating from stats', async () => {
     const stats = { chess_rapid: { last: { rating: 612 } } };
     const r = await fetchRapidRating('me', { fetchImpl: fakeFetch(stats) });
     expect(r).toBe(612);
+  });
+  it('returns null rating when the user has no rapid stats', async () => {
+    expect(await fetchRapidRating('me', { fetchImpl: fakeFetch({}) })).toBeNull();
   });
 });
