@@ -1,0 +1,5 @@
+/* The CSS variable carries the only genuinely-dynamic value (the board's pixel
+   width); the width rule itself lives here in CSS, not inline on the JSX. */
+.board {
+  width: var(--board-size);
+}

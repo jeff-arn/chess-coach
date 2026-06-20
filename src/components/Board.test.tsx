@@ -17,7 +17,11 @@ describe('Board', () => {
         boardWidth={480}
       />,
     );
+    // The board's width now comes from the --board-size custom property (the actual
+    // `width: var(--board-size)` rule lives in Board.module.css). The original test
+    // asserted style.width directly; this asserts the same intent — the requested
+    // width reaches the element — via the custom property that carries it.
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.style.width).toBe('480px');
+    expect(wrapper.style.getPropertyValue('--board-size')).toBe('480px');
   });
 });

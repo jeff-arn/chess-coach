@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { Board } from '@/components/Board';
 import type { Module } from '@/curriculum/types';
+import styles from './ModuleView.module.css';
 
 export function ModuleView({ module }: { module: Module }) {
   const [solved, setSolved] = useState(0);
   return (
     <section className="panel">
       <h1>{module.title}</h1>
-      <p style={{ whiteSpace: 'pre-wrap' }}>{module.content}</p>
+      <p className={styles.content}>{module.content}</p>
       {module.examplePositions[0] && <Board fen={module.examplePositions[0].fen} />}
       <h2>Practice</h2>
       {module.practice.map((p, i) => (
@@ -41,7 +42,7 @@ function PracticeCard({
 }) {
   const [status, setStatus] = useState<'idle' | 'right' | 'wrong'>('idle');
   return (
-    <div className="panel" style={{ marginBottom: 12 }}>
+    <div className={`panel ${styles.practiceCard}`}>
       <Board
         fen={fen}
         onPieceDrop={(_from, to) => {

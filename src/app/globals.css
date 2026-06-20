@@ -9,12 +9,62 @@
   --radius: 10px;
   --gap: 16px;
 }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, sans-serif; }
-a { color: inherit; text-decoration: none; }
-.panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--gap); }
-.muted { color: var(--muted); }
-.bar { height: 8px; border-radius: 5px; background: #2c313a; overflow: hidden; }
-.bar > i { display: block; height: 100%; background: var(--accent); }
-button { font: inherit; color: var(--text); background: #2c313a; border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
-button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    15px/1.5 system-ui,
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.bar {
+  height: 8px;
+  border-radius: 5px;
+  background: #2c313a;
+  overflow: hidden;
+}
+
+.bar > i {
+  display: block;
+  height: 100%;
+  width: var(--bar-fill, 0);
+  background: var(--accent);
+}
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: #2c313a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

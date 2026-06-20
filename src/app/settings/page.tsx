@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getSettings, updateSettings } from '@/lib/apiClient';
+import styles from './page.module.css';
 
 export default function SettingsPage() {
   const [username, setUsername] = useState('');
@@ -17,17 +18,17 @@ export default function SettingsPage() {
   }, []);
 
   return (
-    <section className="panel" style={{ maxWidth: 420 }}>
+    <section className={`panel ${styles.form}`}>
       <h1>Settings</h1>
-      <label style={{ display: 'block', marginTop: 12 }}>
+      <label className={styles.field}>
         chess.com username
         <input value={username} onChange={(e) => setUsername(e.target.value)} />
       </label>
-      <label style={{ display: 'block', marginTop: 12 }}>
+      <label className={styles.field}>
         Target rating
         <input value={target} onChange={(e) => setTarget(e.target.value)} inputMode="numeric" />
       </label>
-      <label style={{ display: 'block', marginTop: 12 }}>
+      <label className={styles.field}>
         Coach brain
         <select value={brain} onChange={(e) => setBrain(e.target.value)}>
           <option value="claude">Claude</option>
@@ -35,7 +36,7 @@ export default function SettingsPage() {
         </select>
       </label>
       <button
-        style={{ marginTop: 16 }}
+        className={styles.submit}
         onClick={() => updateSettings({ chesscomUsername: username, targetRating: Number(target), coachBrain: brain })}
       >
         Save

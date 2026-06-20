@@ -1,4 +1,6 @@
+import type { CSSProperties } from 'react';
 import type { WeaknessProfile } from '@/domain/types';
+import styles from './DashboardView.module.css';
 
 export function DashboardView({
   profile,
@@ -17,22 +19,25 @@ export function DashboardView({
       </section>
     );
   }
-  const top = Object.entries(profile.tagFrequency)
-    .filter(([, v]) => v > 0)
-    .sort((a, b) => b[1] - a[1])
+  const weaknessFrequencies = Object.entries(profile.tagFrequency);
+  const topWeaknesses = weaknessFrequencies
+    .filter(([, frequency]) => frequency > 0)
+    .sort(([, frequencyA], [, frequencyB]) => frequencyB - frequencyA)
     .slice(0, 3);
   return (
-    <div style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr 1fr' }}>
+    <div className={styles.grid}>
       <section className="panel">
         <h2>Milestone</h2>
         <p>{latestRating ?? '—'} → {targetRating ?? '—'}</p>
       </section>
       <section className="panel">
         <h2>Top weaknesses</h2>
-        {top.map(([tag, v]) => (
+        {topWeaknesses.map(([tag, frequency]) => (
           <div key={tag}>
             <span>{tag}</span>
-            <div className="bar"><i style={{ width: `${Math.round(v * 100)}%` }} /></div>
+            <div className="bar">
+              <i style={{ '--bar-fill': `${Math.round(frequency * 100)}%` } as CSSProperties} />
+            </div>
           </div>
         ))}
       </section>

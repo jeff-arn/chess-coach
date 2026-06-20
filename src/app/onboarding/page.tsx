@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateSettings } from '@/lib/apiClient';
+import styles from './page.module.css';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -17,18 +18,18 @@ export default function OnboardingPage() {
   }
 
   return (
-    <section className="panel" style={{ maxWidth: 420 }}>
+    <section className={`panel ${styles.form}`}>
       <h1>Welcome to your chess coach</h1>
       <p className="muted">Connect your chess.com account and pick a goal.</p>
-      <label style={{ display: 'block', marginTop: 12 }}>
+      <label className={styles.field}>
         chess.com username
         <input value={username} onChange={(e) => setUsername(e.target.value)} />
       </label>
-      <label style={{ display: 'block', marginTop: 12 }}>
+      <label className={styles.field}>
         Target rating
         <input value={target} onChange={(e) => setTarget(e.target.value)} inputMode="numeric" />
       </label>
-      <button style={{ marginTop: 16 }} disabled={busy || !username || !target} onClick={start}>
+      <button className={styles.submit} disabled={busy || !username || !target} onClick={start}>
         Start coaching
       </button>
     </section>

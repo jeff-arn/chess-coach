@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import styles from './Nav.module.css';
 
 const LINKS = [
   { href: '/', label: 'Dashboard' },
@@ -9,10 +10,10 @@ const LINKS = [
 
 export function Nav() {
   return (
-    <nav aria-label="Primary" style={{ display: 'grid', gap: 4 }}>
-      <strong style={{ padding: '0 8px 8px' }}>♟ chess-coach</strong>
+    <nav aria-label="Primary" className={styles.nav}>
+      <strong className={styles.brand}>♟ chess-coach</strong>
       {LINKS.map((l) => (
-        <Link key={l.href} href={l.href} style={{ padding: '8px 10px', borderRadius: 8 }}>
+        <Link key={l.href} href={l.href} className={styles.link}>
           {l.label}
         </Link>
       ))}

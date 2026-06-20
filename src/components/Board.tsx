@@ -1,17 +1,19 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import {
   Chessboard,
   type ChessboardOptions,
   type PieceDropHandlerArgs,
 } from 'react-chessboard';
+import styles from './Board.module.css';
 
 // Wraps react-chessboard@5.10.0. v5 takes a single `options` prop and delivers drops as
 // { sourceSquare, targetSquare } (with targetSquare nullable for off-board drops); this
 // wrapper keeps a stable (fen, onPieceDrop(from, to), boardWidth) API so the underlying
 // library stays swappable. There is no boardWidth option in v5 — the board fills its
-// container — so size is set via the wrapping div's runtime-dynamic numeric width
-// (allowed by nextjs-react.md for genuinely dynamic numeric inline styles).
+// container — so size is set via a CSS custom property (--board-size); the width rule
+// lives in Board.module.css and the inline style only carries the dynamic value.
 type BoardProps = {
   fen: string;
   onPieceDrop?: (from: string, to: string) => boolean;
@@ -31,7 +33,10 @@ export function Board({ fen, onPieceDrop, boardWidth = 360 }: BoardProps) {
   };
 
   return (
-    <div style={{ width: boardWidth }}>
+    <div
+      className={styles.board}
+      style={{ '--board-size': `${boardWidth}px` } as CSSProperties}
+    >
       <Chessboard options={options} />
     </div>
   );

@@ -1,0 +1,15 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 180px;
+  height: fit-content;
+  margin: 12px;
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+}

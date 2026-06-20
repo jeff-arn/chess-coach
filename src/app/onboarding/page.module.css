@@ -1,0 +1,12 @@
+.form {
+  max-width: 420px;
+}
+
+.field {
+  display: block;
+  margin-top: 12px;
+}
+
+.submit {
+  margin-top: 16px;
+}
