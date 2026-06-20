@@ -1,0 +1,12 @@
+.form {
+  max-width: 26.25rem;
+}
+
+.field {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.submit {
+  margin-top: 1rem;
+}

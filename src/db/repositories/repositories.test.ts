@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { openDb } from '../connection';
 import { upsertGame } from './gamesRepo';
 import { saveAnalysis, getAnalysis } from './analysesRepo';
-import { saveProfile, latestProfile } from './profilesRepo';
+import { saveProfile, latestProfile, listProfiles } from './profilesRepo';
 import type { Database } from 'better-sqlite3';
 import type { MoveAnalysis, WeaknessProfile } from '@/domain/types';
 
@@ -38,5 +38,17 @@ describe('analysesRepo + profilesRepo', () => {
     saveProfile(db, a);
     saveProfile(db, b);
     expect(latestProfile(db)?.totalMoves).toBe(2);
+  });
+
+  it('lists profiles oldest-first for charting over time', () => {
+    db = openDb(':memory:');
+    saveProfile(db, { totalMoves: 1 } as WeaknessProfile);
+    saveProfile(db, { totalMoves: 2 } as WeaknessProfile);
+    expect(listProfiles(db).map((p) => p.totalMoves)).toEqual([1, 2]);
+  });
+
+  it('returns an empty list when no profiles exist', () => {
+    db = openDb(':memory:');
+    expect(listProfiles(db)).toEqual([]);
   });
 });

@@ -28,8 +28,8 @@ function buildPrompt(input: CoachInput): string {
     .map((m) => `- ${m.id} (${m.title}) addresses: ${m.weaknessTags.join(', ')}`)
     .join('\n');
   const tags = Object.entries(input.profile.tagFrequency)
-    .filter(([, v]) => v > 0)
-    .map(([k, v]) => `${k}=${v.toFixed(2)}`)
+    .filter(([, frequency]) => frequency > 0)
+    .map(([tag, frequency]) => `${tag}=${frequency.toFixed(2)}`)
     .join(', ');
   return [
     'You are a chess coach for a beginner. Build a personalized lesson plan.',

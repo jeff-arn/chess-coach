@@ -5,9 +5,14 @@ node_modules/
 dist/
 .next/
 next-env.d.ts
+public/stockfish/
 coverage/
 *.tsbuildinfo
 
 # Beads / Dolt files (added by bd init)
 .dolt/
 .beads-credential-key
+
+# Playwright
+test-results/
+playwright-report/
