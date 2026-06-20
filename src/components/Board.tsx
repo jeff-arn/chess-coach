@@ -13,7 +13,9 @@ import styles from './Board.module.css';
 // wrapper keeps a stable (fen, onPieceDrop(from, to), boardWidth) API so the underlying
 // library stays swappable. There is no boardWidth option in v5 — the board fills its
 // container — so size is set via a CSS custom property (--board-size); the width rule
-// lives in Board.module.css and the inline style only carries the dynamic value.
+// lives in Board.module.css and the inline style only carries the dynamic value. The
+// numeric `boardWidth` prop is a px-equivalent dimension; it is emitted as rem
+// (boardWidth / 16) to keep all sizing in rem and avoid leaking px via the CSS var.
 type BoardProps = {
   fen: string;
   onPieceDrop?: (from: string, to: string) => boolean;
@@ -35,7 +37,7 @@ export function Board({ fen, onPieceDrop, boardWidth = 360 }: BoardProps) {
   return (
     <div
       className={styles.board}
-      style={{ '--board-size': `${boardWidth}px` } as CSSProperties}
+      style={{ '--board-size': `${boardWidth / 16}rem` } as CSSProperties}
     >
       <Chessboard options={options} />
     </div>

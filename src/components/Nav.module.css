@@ -1,13 +1,13 @@
 .nav {
   display: grid;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .brand {
-  padding: 0 8px 8px;
+  padding: 0 0.5rem 0.5rem;
 }
 
 .link {
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
 }

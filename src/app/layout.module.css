@@ -4,12 +4,12 @@
 }
 
 .sidebar {
-  width: 180px;
+  width: 11.25rem;
   height: fit-content;
-  margin: 12px;
+  margin: 0.75rem;
 }
 
 .content {
   flex: 1;
-  padding: 16px;
+  padding: 1rem;
 }

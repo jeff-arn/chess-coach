@@ -6,8 +6,8 @@
   --muted: #9aa3af;
   --accent: #5a9;
   --danger: #d66;
-  --radius: 10px;
-  --gap: 16px;
+  --radius: 0.625rem;
+  --gap: 1rem;
 }
 
 * {
@@ -19,7 +19,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font:
-    15px/1.5 system-ui,
+    0.9375rem/1.5 system-ui,
     sans-serif;
 }
 
@@ -40,8 +40,8 @@ a {
 }
 
 .bar {
-  height: 8px;
-  border-radius: 5px;
+  height: 0.5rem;
+  border-radius: 0.3125rem;
   background: #2c313a;
   overflow: hidden;
 }
@@ -58,13 +58,13 @@ button {
   color: var(--text);
   background: #2c313a;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 14px;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
   cursor: pointer;
 }
 
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 0.125rem;
 }
